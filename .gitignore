@@ -1,0 +1,19 @@
+.DS_Store
+
+# Debug configuration file
+*.conf
+*.json
+
+*.exe
+*.dll
+*.so
+*.out
+
+# local compiled executable
+/eci
+
+# Bazel build artifacts
+bazel-*
+
+# Deployment file should not be tracked
+deployment/aliyun/deploy.jsonnet

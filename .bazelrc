@@ -1,0 +1,2 @@
+# go-jsonnet is not working well with bazel
+build --define jsonnet_port=cpp
