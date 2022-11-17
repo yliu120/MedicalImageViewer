@@ -15,5 +15,5 @@
 # Bazel build artifacts
 bazel-*
 
-# Deployment file should not be tracked
-deployment/aliyun/deploy.jsonnet
+# Private deployment file should not be tracked
+*.private
