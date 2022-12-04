@@ -97,6 +97,10 @@ func deploy(eciClient *eci.Client, conf *CreateContainerGroupConf, dryRun bool) 
 
 	response, err := eciClient.CreateContainerGroupWithOptions(&conf.ContainerGroup, ropts)
 	if err != nil {
+		if eipResp != nil {
+			resp := vpc_utils.ReleaseEipAddress(&conf.Client, eipResp.Body.AllocationId, dryRun)
+			logInfo.Println("Release allocated EIP address: ", resp.GoString())
+		}
 		logFatal.Fatalln("Failed to create container group request: ", err)
 	}
 
