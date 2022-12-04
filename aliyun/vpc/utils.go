@@ -28,6 +28,8 @@ func AllocateEipAddress(clientConfig *openapi.Config, dryRun bool) *vpc.Allocate
 		logError.Println("Unable to create EIP address with a null client config.")
 		return nil
 	}
+
+	// TODO: Extract to a init func.
 	vpcClientConfig := &openapi.Config{}
 	vpcClientConfig.SetAccessKeyId(*clientConfig.AccessKeyId)
 	vpcClientConfig.SetAccessKeySecret(*clientConfig.AccessKeySecret)
@@ -49,6 +51,37 @@ func AllocateEipAddress(clientConfig *openapi.Config, dryRun bool) *vpc.Allocate
 		logError.Println("Fail to create AllocateEipAddress.", err)
 	}
 	logInfo.Printf("Got AllocateEipAddressResponse: %s", resp.GoString())
+	return resp
+}
+
+func ReleaseEipAddress(clientConfig *openapi.Config,
+	allocationId *string, dryRun bool) *vpc.ReleaseEipAddressResponse {
+	if dryRun {
+		return nil
+	}
+
+	vpcClientConfig := &openapi.Config{}
+	vpcClientConfig.SetAccessKeyId(*clientConfig.AccessKeyId)
+	vpcClientConfig.SetAccessKeySecret(*clientConfig.AccessKeySecret)
+	vpcClientConfig.SetRegionId(*clientConfig.RegionId)
+
+	vpcClient, err := vpc.NewClient(vpcClientConfig)
+	if err != nil {
+		logError.Println("Unable to create a VPC client.", err)
+		return nil
+	}
+
+	releaseEipAddressReq := &vpc.ReleaseEipAddressRequest{}
+	releaseEipAddressReq.SetAllocationId(*allocationId)
+	releaseEipAddressReq.SetRegionId(*clientConfig.RegionId)
+
+	runtime := &tea.RuntimeOptions{}
+
+	resp, err := vpcClient.ReleaseEipAddressWithOptions(releaseEipAddressReq, runtime)
+	if err != nil {
+		logError.Println("Fail to ReleaseEipAddress.", err)
+	}
+	logInfo.Printf("EipAddress Released: %s", resp.GoString())
 	return resp
 }
 
