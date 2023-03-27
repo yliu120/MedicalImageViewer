@@ -137,7 +137,8 @@ func main() {
 	if err != nil {
 		logFatal.Fatalln("Unable to parse configuration file.", err)
 	}
-	conf.Client.SetEndpoint("eci.cn-zhangjiakou.aliyuncs.com").SetType("access_key")
+
+	conf.Client.SetEndpoint("eci." + *conf.Client.RegionId + ".aliyuncs.com").SetType("access_key")
 	logInfo.Println("conf: ", conf.Client)
 
 	eciClient, err := eci.NewClient(&conf.Client)

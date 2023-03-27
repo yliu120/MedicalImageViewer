@@ -45,11 +45,15 @@
 
   ContainerGroup: {
     NFSServer:: error 'Must override "NFSServer"',
+    KernelImage:: 'registry.cn-zhangjiakou.aliyuncs.com/gromacs-2022/notebook:latest',
     SecurityGroupId: error 'Must override "SecurityGroupId"',
     VSwitchId: error 'Must override "VSwitchId"',
     InstanceType: 'ecs.gn6i-c4g1.xlarge',
+    SpotStrategy: 'SpotAsPriceGo',
+    ActiveDeadlineSeconds: 3600 * 3,
+
     Cpu: 4,
-    Memory: 8,
+    Memory: 15,
     GpuAllowedInNotebook:: 1,
     // Not charged by bandwidth. Default to 200 MB.
     AutoCreateEip: false,
@@ -62,30 +66,30 @@
     Container: [
       $.Container {
         ports:: [8888],
-        Image: 'registry.cn-zhangjiakou.aliyuncs.com/gromacs-2022/notebook:latest',
+        Image: group.KernelImage,
         Name: 'molecular-dynamics-notebook',
-        VolumeMount: [
-	  {
-	    MountPath: '/root',
-	    Name: NotebookVolumeName,
-	    ReadOnly: false,
-	  },
-	],
+        //VolumeMount: [
+	//  {
+	//    MountPath: '/root',
+	//    Name: NotebookVolumeName,
+	//    ReadOnly: false,
+	//  },
+	//],
 	Gpu: group.GpuAllowedInNotebook,
       },
     ],
     // Default to the smallest allocation.
     // Containers inside the pod will make full use of the specified resources.
-    Volume: [
-      $.Volume {
-        Name: NotebookVolumeName,
-        Type: 'NFSVolume',
-        NFSVolume: {
-          Path: '/',
-          ReadOnly: false,
-          Server: group.NFSServer,
-        },
-      },
-    ],
+    //Volume: [
+    //  $.Volume {
+    //    Name: NotebookVolumeName,
+    //    Type: 'NFSVolume',
+    //    NFSVolume: {
+    //      Path: '/',
+    //      ReadOnly: false,
+    //      Server: group.NFSServer,
+    //    },
+    //  },
+    //],
   },
 }
