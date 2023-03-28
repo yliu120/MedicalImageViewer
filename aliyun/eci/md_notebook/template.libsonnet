@@ -68,28 +68,28 @@
         ports:: [8888],
         Image: group.KernelImage,
         Name: 'molecular-dynamics-notebook',
-        //VolumeMount: [
-	//  {
-	//    MountPath: '/root',
-	//    Name: NotebookVolumeName,
-	//    ReadOnly: false,
-	//  },
-	//],
+        VolumeMount: [
+	  {
+	    MountPath: '/root',
+	    Name: NotebookVolumeName,
+	    ReadOnly: false,
+	  },
+	],
 	Gpu: group.GpuAllowedInNotebook,
       },
     ],
     // Default to the smallest allocation.
     // Containers inside the pod will make full use of the specified resources.
-    //Volume: [
-    //  $.Volume {
-    //    Name: NotebookVolumeName,
-    //    Type: 'NFSVolume',
-    //    NFSVolume: {
-    //      Path: '/',
-    //      ReadOnly: false,
-    //      Server: group.NFSServer,
-    //    },
-    //  },
-    //],
+    Volume: [
+      $.Volume {
+        Name: NotebookVolumeName,
+        Type: 'NFSVolume',
+        NFSVolume: {
+          Path: '/',
+          ReadOnly: false,
+          Server: group.NFSServer,
+        },
+      },
+    ],
   },
 }
